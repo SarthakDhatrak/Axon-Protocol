@@ -20,7 +20,7 @@ WORKDIR /code
 
 # Copy installed packages from builder
 COPY --from=builder /root/.local /root/.local
-COPY --from=builder /root/.cache/torch /root/.cache/torch
+COPY --from=builder /root/.cache/huggingface /root/.cache/huggingface
 
 ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1

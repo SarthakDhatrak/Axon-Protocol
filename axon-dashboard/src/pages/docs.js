@@ -309,16 +309,19 @@ function buildIntroduction() {
 function buildQuickStart() {
   return section('quickstart', 'Quick Start',
     text('Get a local Axon environment running in under 60 seconds. No Docker, no PostgreSQL, no Redis needed — local mode uses SQLite and in-memory PubSub.'),
-    h3('1. Clone the repository'),
-    codeBlock('bash', `git clone https://github.com/SarthakDhatrak/Axon-Protocol.git
-cd Axon-Protocol`),
-    h3('2. Install the server'),
-    codeBlock('bash', `cd axon-core
-pip install -e .`),
-    h3('3. Start the server in local mode'),
-    codeBlock('bash', `python -m app.cli dev`),
+    h3('Option A: Easiest Setup (Global NPM Wrapper)'),
+    text('Install the server globally using npm. This automatically configures isolated virtual environments and python dependencies for you.'),
+    codeBlock('bash', `npm install -g axon-protocol-server
+axon dev`),
+    h3('Option B: Manual Setup (From Source)'),
+    text('Clone the repository and install dependencies manually:'),
+    codeBlock('bash', `git clone https://github.com/ZugguGroup/Axon-Protocol.git
+cd Axon-Protocol
+cd axon-core
+pip install -r requirements.txt
+python -m app.cli dev`),
     text('The server will start at <strong>http://localhost:8000</strong>. The auto-discovery system detects the adjacent <code>axon-dashboard</code> directory, compiles it with Vite, and serves the dashboard at the root URL.'),
-    h3('4. Connect with the Python SDK'),
+    h3('Connect with the Python SDK'),
     codeBlock('python', `from axon import AxonSyncClient
 
 client = AxonSyncClient(
@@ -342,24 +345,24 @@ print(results)`),
 
 function buildInstallation() {
   return section('installation', 'Installation',
-    h3('Server (axon-core)'),
+    h3('Global Server Package (NPM)'),
+    text('The easiest way to install and manage the Axon Core server on your machine:'),
+    codeBlock('bash', `npm install -g axon-protocol-server`),
+    h3('Manual Server Installation (From Source)'),
     text('Requires <strong>Python ≥ 3.12</strong>. For local development, no external databases are needed.'),
     codeBlock('bash', `cd axon-core
-pip install -e .
-
-# Or install from requirements.txt
 pip install -r requirements.txt`),
     h3('Python SDK'),
     text('Requires <strong>Python ≥ 3.10</strong>. Dependencies: <code>httpx</code>, <code>websockets</code>.'),
     codeBlock('bash', `pip install axon-protocol
-
+ 
 # Or install from source
 cd axon-sdk-python
 pip install -e .`),
     h3('JavaScript SDK'),
     text('Works with <strong>Node.js ≥ 18</strong>. Ships ESM and CJS builds with full TypeScript types.'),
     codeBlock('bash', `npm install axon-protocol
-
+ 
 # Or install from source
 cd axon-sdk-js
 npm install && npm run build`),

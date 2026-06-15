@@ -1,4 +1,4 @@
-# Axon Protocol - Multi-Agent AI Infrastructure
+# Axon Protocol — Multi-Agent AI Infrastructure
 
 > **An open-source orchestration backend, client SDKs, and real-time developer console for building, coordinating, and auditing multi-agent AI fleets.**
 > Built by **Zuggu Group**.
@@ -55,8 +55,23 @@ The monorepo contains the following workspace folders:
 
 ## Getting Started
 
-### 1. Run the Backend (`axon-core`)
+### Option A: The Easiest Way (NPM Global Package)
+If you have Node.js and Python installed on your system, you can install and run the Axon server globally with zero configuration:
 
+```bash
+# 1. Install the server wrapper globally
+npm install -g axon-protocol-server
+
+# 2. Run the server instantly in dev mode
+axon dev
+```
+*Note: This automatically creates an isolated Python virtual environment in `~/.axon/venv`, upgrades pip, installs dependencies, and runs the server.*
+
+---
+
+### Option B: The Manual Developer Setup
+
+#### 1. Run the Backend (`axon-core`)
 By default, the core API runs in `local` mode using SQLite and ChromaDB, requiring no external database services.
 
 ```bash
@@ -69,7 +84,7 @@ pip install -r requirements.txt
 python -m app.cli dev
 ```
 
-### 2. Run the Developer Console (`axon-dashboard`)
+#### 2. Run the Developer Console (`axon-dashboard`)
 
 ```bash
 cd axon-dashboard
@@ -81,7 +96,7 @@ npm install
 npm run dev
 ```
 
-### 3. Build & Deploy Production Console Assets
+#### 3. Build & Deploy Production Console Assets
 To compile the console and bundle it statically into the core backend:
 ```bash
 cd axon-dashboard

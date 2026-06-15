@@ -143,3 +143,12 @@ client.events.subscribe((event) => {
 ## Detailed Documentation
 
 Full documentation, including getting started tutorials, architecture details, complete API references, and SDK code templates, is available built-in on the **Documentation Page** within the developer console (accessible publicly at `#/docs`).
+
+---
+
+## License & Corporate Info
+
+Developed and Maintained by the **Zuggu Group**. All rights reserved. 
+
+For inquiries regarding multi-agent orchestration deployments, custom AI agent integrations, or dedicated enterprise support, please reach out to the Zuggu Group engineering division.
+

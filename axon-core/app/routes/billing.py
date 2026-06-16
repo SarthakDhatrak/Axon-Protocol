@@ -35,12 +35,15 @@ async def create_checkout_session(
                     sub.customer_id = customer_id
                     await db.commit()
             
+            if not settings.STRIPE_PRO_PRICE_ID:
+                raise HTTPException(status_code=400, detail="Stripe configuration missing. Contact hello@zuggu.tech")
+                
             # Create Stripe Checkout Session
             session = stripe.checkout.Session.create(
                 customer=customer_id,
                 payment_method_types=['card'],
                 line_items=[{
-                    'price': settings.STRIPE_PRO_PRICE_ID or 'price_pro_plan_placeholder', # Replace with real price ID
+                    'price': settings.STRIPE_PRO_PRICE_ID,
                     'quantity': 1,
                 }],
                 mode='subscription',

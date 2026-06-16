@@ -1,169 +1,98 @@
-# Axon Protocol — Multi-Agent AI Infrastructure
+<div align="center">
+  <img src="axon-dashboard/public/favicon.svg" width="80" alt="Axon Logo"/>
+  <h1>Axon Protocol</h1>
+  <p><strong>The open-source coordination backend for building, auditing, and scaling multi-agent AI fleets.</strong></p>
+</div>
 
-> **An open-source orchestration backend, client SDKs, and real-time developer console for building, coordinating, and auditing multi-agent AI fleets.**
-> Built by **Zuggu Group**.
+<br/>
 
----
+<div align="center">
+  <img src="axon-demo/demo.gif" alt="Axon Twin Agents Coordination Demo" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+</div>
 
-## Architecture & Project Structure
+<br/>
 
-Axon Protocol follows a hub-and-spoke model. Autonomous agents run locally or in the cloud using our SDKs (the spokes) and coordinate through a central Axon Core API server (the hub), while developers monitor activity via the Axon Dashboard.
+## 🚀 One-Command Install
 
-```
-       ┌────────────────────────────────────────────────────────┐
-       │                       YOUR AGENTS                      │
-       └─────┬───────────────────────────┬──────────────────────┘
-             │ (Python SDK)              │ (JavaScript SDK)
-             ▼                           ▼
-   ┌───────────────────┐       ┌───────────────────┐
-   │  axon-sdk-python  │       │    axon-sdk-js    │
-   └─────────┬─────────┘       └─────────┬─────────┘
-             │                           │
-             └─────────────┬─────────────┘
-                           │ (HTTP/WS)
-                           ▼
-                 ┌───────────────────┐       ┌──────────────────┐
-                 │     axon-core     │ ◄────►│  axon-dashboard  │
-                 │   (FastAPI Hub)   │       │ (Vite Developer) │
-                 └───────────────────┘       └──────────────────┘
-```
-
-The monorepo contains the following workspace folders:
-
-| Component | Description | Technologies |
-|---|---|---|
-| [`axon-core`](file:///e:/Axon/axon-core) | Central orchestration API and database adapter. | FastAPI, SQLAlchemy, PostgreSQL/SQLite, pgvector/ChromaDB |
-| [`axon-dashboard`](file:///e:/Axon/axon-dashboard) | Premium web developer console for visualization. | Vite, Vanilla JS & CSS, WebSockets |
-| [`axon-sdk-python`](file:///e:/Axon/axon-sdk-python) | Python library for agent interaction. | HTTP client, context managers, async/sync |
-| [`axon-sdk-js`](file:///e:/Axon/axon-sdk-js) | TypeScript/JavaScript client library. | Fetch, WebSockets, event handlers |
-| [`axon-mcp`](file:///e:/Axon/axon-mcp) | Model Context Protocol server for direct LLM tools. | MCP specification, node / python adapters |
-| [`axon-cli`](file:///e:/Axon/axon-cli) | Command-line utility for managing core entities. | Python, Click CLI |
-
----
-
-## Key Features
-
-1. **Multi-Tenant Projects**: Fully isolated environments, each protected by secure, rotatable Project API Keys.
-2. **Shared Semantic Memory**: Server-side vector memory embedding (using SentenceTransformers) and semantic search (via ChromaDB or pgvector) with configurable TTL and scope (Private, Project, or Organization).
-3. **Distributed Locks**: High-performance concurrency control to coordinate locks and prevent race conditions when multiple agents interact with shared files or external endpoints.
-4. **Cryptographic Chained Receipts**: An auditable ledger of reasoning steps and results. Receipts are cryptographically hashed and chained together to produce an immutable, verifiable execution graph.
-5. **Peer-to-Peer Agent Messaging**: Decoupled messaging channels enabling agents to subscribe to topics, send JSON payloads, and exchange coordination cues.
-6. **Real-time Event Streaming**: A persistent WebSocket channel broadcasting events (locks, memories, messages, receipts) instantly to the dashboard console.
-7. **Deletion Controls**: Capability to delete obsolete agents and projects (along with cascade cleanups) securely from the dashboard.
-
----
-
-## Getting Started
-
-### Option A: The Easiest Way (NPM Global Package)
-If you have Node.js and Python installed on your system, you can install and run the Axon server globally with zero configuration:
+Get started instantly with our Python SDK:
 
 ```bash
-# 1. Install the server wrapper globally
-npm install -g axon-protocol-server
+pip install axon-protocol
+```
 
-# 2. Run the server instantly in dev mode
+Or deploy the local development server and UI dashboard with zero configuration:
+
+```bash
+npm install -g axon-protocol-server
 axon dev
 ```
-*Note: This automatically creates an isolated Python virtual environment in `~/.axon/venv`, upgrades pip, installs dependencies, and runs the server.*
 
 ---
 
-### Option B: The Manual Developer Setup
+## ⚡ Why Axon Protocol? (Axon vs. Traditional DBs)
 
-#### 1. Run the Backend (`axon-core`)
-By default, the core API runs in `local` mode using SQLite and ChromaDB, requiring no external database services.
+When building autonomous AI agents, standard databases aren't enough. Agents face race conditions, need semantic memory, and require auditable reasoning chains. 
 
-```bash
-cd axon-core
-
-# Install dependencies (ensure you have virtual env activated)
-pip install -r requirements.txt
-
-# Run in development mode (launches FastAPI at http://localhost:8000)
-python -m app.cli dev
-```
-
-#### 2. Run the Developer Console (`axon-dashboard`)
-
-```bash
-cd axon-dashboard
-
-# Install packages
-npm install
-
-# Run Vite dev server (launches console at http://localhost:5173)
-npm run dev
-```
-
-#### 3. Build & Deploy Production Console Assets
-To compile the console and bundle it statically into the core backend:
-```bash
-cd axon-dashboard
-npm run build
-
-# Copy build output to core static directory
-Remove-Item -Recurse -Force "../axon-core/app/static/*" -ErrorAction SilentlyContinue
-Copy-Item -Recurse "dist/*" "../axon-core/app/static/" -Force
-```
+| Capability | Traditional DB (e.g., PostgreSQL) | Axon Protocol |
+|------------|-----------------------------------|---------------|
+| **Memory** | Raw rows & columns | Built-in Vector Memory & Semantic Search |
+| **Coordination** | Standard transactions | Distributed Agent Locks (prevent race conditions) |
+| **Auditability** | Access logs | Cryptographic Reasoning Receipts (Chained) |
+| **Messaging** | Pub/Sub overhead | Native P2P Agent Messaging |
+| **Visibility** | Requires custom dashboards | Real-time WebSockets & Built-in Developer UI |
 
 ---
 
-## SDK Usage Examples
+## ✨ Core Features
 
-### Python SDK
+- 🧠 **Persistent Semantic Memory**: Agents can store and semantically search memories using native vector embeddings.
+- 🚦 **Distributed Locks**: High-performance concurrency control. Prevent two agents from writing to the same file or hitting the same API simultaneously.
+- 📜 **Reasoning Receipts**: Cryptographically chained logs of what your agents did, why they did it, and what the outcome was.
+- 💬 **Peer-to-Peer Messaging**: Let agents talk to each other and coordinate via decentralized topics.
+- 🛠️ **Universal Integrations**: Native support for **LangChain**, **CrewAI**, and an **MCP Server** for Claude Desktop.
+- 🖥️ **Real-Time Dashboard**: Watch your agent fleets think, coordinate, and act live from a beautiful glassmorphism web console.
+
+---
+
+## 📚 Quick Start
+
+### 1. Initialize the Client
 
 ```python
+import asyncio
 from axon import AxonClient
 
-# Initialize client with Project API Key and Endpoint
-client = AxonClient(api_key="your-project-api-key", base_url="http://localhost:8000")
+client = AxonClient(api_key="your-api-key", base_url="http://localhost:8000")
+```
 
-# Register an agent
-agent = client.agents.register("researcher-agent", capabilities=["web-search"])
+### 2. Prevent Race Conditions
 
-# Acquire a distributed resource lock
-with client.coordination.lock("db-write-resource", timeout_seconds=60):
-    # Perform task safely ...
-    print("Lock acquired safely!")
+```python
+async def safe_db_write():
+    # If another agent holds 'db-write', this waits safely
+    lock = await client.locks.acquire("db-write", timeout=30)
+    if lock:
+        try:
+            print("Safely writing to database...")
+        finally:
+            await client.locks.release("db-write")
+```
 
+### 3. Store and Search Memory
+
+```python
 # Store a memory
-client.memory.store("User preferred output format is markdown.", scope="project")
+await client.memory.store("User prefers concise, bulleted responses.", scope="project")
 
-# Perform semantic search
-results = client.memory.search("What is the user preferred format?")
-```
-
-### JavaScript/TypeScript SDK
-
-```typescript
-import { AxonClient } from '@axon/sdk-js';
-
-const client = new AxonClient({
-  apiKey: 'your-project-api-key',
-  baseUrl: 'http://localhost:8000'
-});
-
-// Register agent
-const agent = await client.agents.register('agent-1', ['parsing']);
-
-// Subscribe to real-time events
-client.events.subscribe((event) => {
-  console.log('Received real-time event:', event);
-});
+# Retrieve semantically relevant memories
+memories = await client.memory.search("What is the preferred output format?")
+print(memories[0].content) # "User prefers concise, bulleted responses."
 ```
 
 ---
 
-## Detailed Documentation
+## 🤝 Community & Support
 
-Full documentation, including getting started tutorials, architecture details, complete API references, and SDK code templates, is available built-in on the **Documentation Page** within the developer console (accessible publicly at `#/docs`).
+Developed by **Zuggu Group**. 
 
----
-
-## License & Corporate Info
-
-Developed and Maintained by the **Zuggu Group**. All rights reserved. 
-
-For inquiries regarding multi-agent orchestration deployments, custom AI agent integrations, or dedicated enterprise support, please reach out to the Zuggu Group engineering division.
-
+We are fully open-source (MIT License). If you're building multi-agent systems and need enterprise support or managed cloud hosting, reach out to us at [hello@zuggu.tech](mailto:hello@zuggu.tech).

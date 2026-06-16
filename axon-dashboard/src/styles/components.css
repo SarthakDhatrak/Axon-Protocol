@@ -501,3 +501,185 @@ table tr:hover td { background: var(--bg-glass); }
 .skeleton-line.short { width: 40%; }
 .skeleton-line.medium { width: 70%; }
 .skeleton-card { height: 120px; }
+
+/* ── Auth Card (standalone page) ── */
+.auth-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--space-lg);
+  width: 100%;
+}
+
+/* ════════════════════════════════════════════════
+   COMPONENT RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Cards */
+  .card {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+
+  .card-value {
+    font-size: 28px;
+  }
+
+  .card-title {
+    font-size: 13px;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 8px 18px;
+    font-size: 12px;
+  }
+
+  /* Inputs */
+  .input {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  /* Modals */
+  .modal {
+    width: 95vw;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+
+  .modal-title {
+    font-size: 16px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: var(--space-sm);
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Tables */
+  .table-container {
+    border-radius: var(--radius-md);
+  }
+
+  .table-header {
+    padding: var(--space-md);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .table-title {
+    font-size: 14px;
+  }
+
+  table th, table td {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 11px;
+  }
+
+  /* Event Stream */
+  .event-item {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .event-time {
+    min-width: auto;
+    font-size: 10px;
+    order: 1;
+    width: 100%;
+  }
+
+  .event-type {
+    min-width: auto;
+    order: 2;
+  }
+
+  .event-detail {
+    order: 3;
+    width: 100%;
+    font-size: 11px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .event-log {
+    max-height: 400px;
+  }
+
+  /* Receipt chain */
+  .receipt-step {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .receipt-step::before {
+    left: 22px;
+  }
+
+  .step-thought {
+    font-size: 12px;
+  }
+
+  .step-meta {
+    font-size: 11px;
+  }
+
+  /* Toasts */
+  #toast-container {
+    left: var(--space-sm);
+    right: var(--space-sm);
+    top: var(--space-sm);
+  }
+
+  .toast {
+    max-width: 100%;
+    font-size: 12px;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  /* Search */
+  .search-bar {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: var(--space-sm);
+  }
+
+  .card-value {
+    font-size: 24px;
+  }
+
+  .stat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .badge {
+    font-size: 9px;
+    padding: 2px 7px;
+  }
+
+  .btn {
+    padding: 7px 14px;
+    font-size: 11px;
+  }
+
+  .input {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: var(--radius-md);
+  }
+}

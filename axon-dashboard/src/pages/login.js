@@ -13,7 +13,7 @@ export function renderLogin() {
   if (sidebar) sidebar.style.display = 'none';
   if (header) header.style.display = 'none';
 
-  // Make main layout full screen
+  // Make main layout full screen centered
   const main = document.querySelector('main');
   if (main) {
     main.style.marginLeft = '0';
@@ -25,6 +25,13 @@ export function renderLogin() {
     main.style.background = '#030303';
   }
 
+  // Make content area a proper centered container
+  container.style.display = 'flex';
+  container.style.justifyContent = 'center';
+  container.style.alignItems = 'center';
+  container.style.padding = '16px';
+  container.style.maxWidth = '100%';
+
   let isSignup = false;
 
   function renderForm() {
@@ -32,19 +39,29 @@ export function renderLogin() {
 
     const titleText = isSignup ? 'Create account' : 'Welcome back';
     const subtitleText = isSignup ? 'Get started with your multi-tenant developer console' : 'Log in to manage your multi-agent infrastructure';
-    const submitText = isSignup ? 'Sign Up' : 'Log In';
+    const submitText = isSignup ? 'Create Account' : 'Log In';
     const toggleText = isSignup ? 'Already have an account? Log in' : "Don't have an account? Sign up";
 
-    const emailInput = el('input', { type: 'email', className: 'input', placeholder: 'name@company.com', required: true });
-    const passwordInput = el('input', { type: 'password', className: 'input', placeholder: '••••••••', required: true });
+    const emailInput = el('input', { type: 'email', id: 'auth-email', className: 'input', placeholder: 'name@company.com', required: true, autocomplete: 'email' });
+    const passwordInput = el('input', { type: 'password', id: 'auth-password', className: 'input', placeholder: '••••••••', required: true, autocomplete: isSignup ? 'new-password' : 'current-password' });
 
-    const submitBtn = el('button', { className: 'btn btn-primary', style: 'width: 100%; justify-content: center; margin-top: var(--space-md); padding: var(--space-md); font-size: 14px; height: auto;', textContent: submitText });
+    const submitBtn = el('button', { 
+      type: 'submit',
+      id: 'auth-submit',
+      className: 'btn btn-primary', 
+      style: 'width: 100%; justify-content: center; padding: 12px 24px; font-size: 14px; height: auto; font-weight: 700; letter-spacing: 0.02em;', 
+      textContent: submitText 
+    });
 
     const toggleLink = el('a', { 
       href: '#', 
-      style: 'display: block; text-align: center; margin-top: var(--space-lg); font-size: 13px; color: var(--text-secondary); text-decoration: none; font-weight: 500;',
+      id: 'auth-toggle',
+      style: 'display: block; text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 150ms ease;',
       textContent: toggleText
     });
+
+    toggleLink.addEventListener('mouseenter', () => { toggleLink.style.color = 'var(--text-primary)'; });
+    toggleLink.addEventListener('mouseleave', () => { toggleLink.style.color = 'var(--text-secondary)'; });
 
     toggleLink.addEventListener('click', (e) => {
       e.preventDefault();
@@ -52,16 +69,19 @@ export function renderLogin() {
       renderForm();
     });
 
-    const form = el('form', { style: 'display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-lg);' },
+    const form = el('form', { 
+      id: 'auth-form',
+      style: 'display: flex; flex-direction: column; gap: 16px; margin-top: 24px;' 
+    },
       el('div', { className: 'input-group' },
-        el('label', { className: 'input-label', textContent: 'Email Address' }),
+        el('label', { className: 'input-label', htmlFor: 'auth-email', textContent: 'Email Address' }),
         emailInput
       ),
       el('div', { className: 'input-group' },
-        el('label', { className: 'input-label', textContent: 'Password' }),
+        el('label', { className: 'input-label', htmlFor: 'auth-password', textContent: 'Password' }),
         passwordInput
       ),
-      submitBtn
+      el('div', { style: 'margin-top: 8px;' }, submitBtn)
     );
 
     form.addEventListener('submit', async (e) => {
@@ -74,7 +94,13 @@ export function renderLogin() {
         return;
       }
 
+      if (isSignup && password.length < 6) {
+        showToast('Password must be at least 6 characters', 'error');
+        return;
+      }
+
       submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
       submitBtn.textContent = isSignup ? 'Creating account...' : 'Logging in...';
 
       try {
@@ -99,31 +125,64 @@ export function renderLogin() {
       } catch (err) {
         showToast(err.message || 'Authentication failed', 'error');
         submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
         submitBtn.textContent = submitText;
       }
     });
 
-    const authCard = el('div', { 
-      className: 'card animate-fade-in', 
-      style: 'width: 100%; max-width: 420px; padding: var(--space-2xl); border-radius: 16px; border: 1px solid var(--border-color); box-shadow: var(--shadow-lg); background: #09090b;' 
+    // Logo mark
+    const logoMark = el('div', { 
+      style: 'width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #09090b, #18181b); border: 1px solid rgba(255, 255, 255, 0.12); color: white; display: flex; align-items: center; justify-content: center; font-family: "JetBrains Mono", monospace; font-size: 20px; font-weight: 700; margin: 0 auto 16px auto; box-shadow: 0 0 20px rgba(255, 255, 255, 0.04), 0 4px 16px rgba(0, 0, 0, 0.4);' 
+    }, 'A');
+
+    // Divider with "or"
+    const divider = el('div', { 
+      style: 'display: flex; align-items: center; gap: 12px; margin-top: 20px;' 
     },
-      el('div', { style: 'text-align: center; margin-bottom: var(--space-lg);' },
-        el('div', { 
-          style: 'width: 44px; height: 44px; border-radius: 8px; background: #09090b; border: 1px solid rgba(255, 255, 255, 0.12); color: white; display: flex; align-items: center; justify-content: center; font-family: "JetBrains Mono", monospace; font-size: 18px; font-weight: 700; margin: 0 auto var(--space-md) auto; box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);' 
-        }, 'A'),
-        el('h1', { style: 'font-size: 20px; font-weight: 800; color: var(--text-primary);', textContent: titleText }),
-        el('p', { style: 'font-size: 13px; color: var(--text-muted); margin-top: var(--space-xs); line-height: 1.4;', textContent: subtitleText })
+      el('div', { style: 'flex: 1; height: 1px; background: var(--border-color);' }),
+      el('span', { style: 'font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;', textContent: 'or' }),
+      el('div', { style: 'flex: 1; height: 1px; background: var(--border-color);' })
+    );
+
+    // Back to landing link
+    const backLink = el('a', {
+      href: '#/landing',
+      style: 'display: block; text-align: center; font-size: 12px; color: var(--text-muted); text-decoration: none; margin-top: 12px; transition: color 150ms ease;',
+      textContent: '← Back to home'
+    });
+    backLink.addEventListener('mouseenter', () => { backLink.style.color = 'var(--text-secondary)'; });
+    backLink.addEventListener('mouseleave', () => { backLink.style.color = 'var(--text-muted)'; });
+
+    const authCard = el('div', { 
+      className: 'card animate-scale-in', 
+      id: 'auth-card',
+      style: 'width: 100%; max-width: 420px; padding: 40px 36px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.02); background: #09090b;' 
+    },
+      el('div', { style: 'text-align: center; margin-bottom: 8px;' },
+        logoMark,
+        el('h1', { style: 'font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;', textContent: titleText }),
+        el('p', { style: 'font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;', textContent: subtitleText })
       ),
       form,
-      toggleLink
+      toggleLink,
+      divider,
+      backLink
     );
 
     mount(container, authCard);
+
+    // Auto-focus the email field
+    requestAnimationFrame(() => emailInput.focus());
   }
 
   function restoreLayout() {
     if (sidebar) sidebar.style.display = 'block';
     if (header) header.style.display = 'flex';
+    container.style.display = '';
+    container.style.justifyContent = '';
+    container.style.alignItems = '';
+    container.style.padding = '';
+    container.style.maxWidth = '';
     if (main) {
       main.style.marginLeft = '';
       main.style.padding = '';

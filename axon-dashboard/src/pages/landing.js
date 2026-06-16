@@ -24,20 +24,31 @@ export function renderLanding() {
   container.innerHTML = '';
 
   // 1. Navigation bar
+  const hamburgerBtn = el('button', { className: 'landing-nav-hamburger' });
+  hamburgerBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+
+  const navLinks = el('div', { className: 'landing-nav-links' },
+    el('a', { href: '#features-sec', className: 'landing-nav-link', textContent: 'Features' }),
+    el('a', { href: '#arch-sec', className: 'landing-nav-link', textContent: 'Architecture' }),
+    el('a', { href: '#/docs', className: 'landing-nav-link', textContent: 'Documentation' })
+  );
+
   const nav = el('nav', { className: 'landing-nav animate-fade-in' },
+    hamburgerBtn,
     el('div', { className: 'landing-nav-logo' },
       el('div', { className: 'landing-logo-mark' }, 'A'),
       el('span', { className: 'landing-logo-text', textContent: 'Axon Protocol' })
     ),
-    el('div', { className: 'landing-nav-links' },
-      el('a', { href: '#features-sec', className: 'landing-nav-link', textContent: 'Features' }),
-      el('a', { href: '#arch-sec', className: 'landing-nav-link', textContent: 'Architecture' }),
-      el('a', { href: '#/docs', className: 'landing-nav-link', textContent: 'Documentation' })
-    ),
+    navLinks,
     el('div', { className: 'landing-nav-actions' },
       el('button', { className: 'btn btn-secondary btn-sm', textContent: 'Log In' })
     )
   );
+
+  // Mobile hamburger toggle
+  hamburgerBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
 
   // Hook scroll to auth block
   const scrollToAuth = (e) => {
@@ -52,7 +63,12 @@ export function renderLanding() {
   nav.querySelectorAll('.landing-nav-links a').forEach(a => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
+      navLinks.classList.remove('open'); // Close mobile menu on click
       const targetId = a.getAttribute('href').replace('#', '');
+      if (targetId.startsWith('/')) {
+        navigate(targetId.replace('/', ''));
+        return;
+      }
       const target = document.getElementById(targetId);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
@@ -351,7 +367,7 @@ function renderAuthIn(authSection) {
 
     const authCard = el('div', { 
       className: 'card animate-fade-in', 
-      style: 'width: 100%; max-width: 420px; padding: var(--space-2xl); border-radius: 16px; border: 1px solid var(--border-color); box-shadow: var(--shadow-lg); background: #09090b;' 
+      style: 'width: 100%; max-width: 420px; padding: 40px 36px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.02); background: #09090b;' 
     },
       el('div', { style: 'text-align: center; margin-bottom: var(--space-lg);' },
         el('div', { 
